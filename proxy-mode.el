@@ -68,13 +68,18 @@
 
 (defun proxy-mode-http-enable ()
   "Enable HTTP proxy."
-  (make-local-variable 'process-environment)
-  ;; TODO: how to `setenv' buffer locally?
-  ;; ( "HTTP_PROXY" process-environment)
+  ;; `setenv' works by modifying ‘process-environment’.
   (setenv "HTTP_PROXY"  proxy-mode-http-proxy)
   (setenv "HTTPS_PROXY" proxy-mode-http-proxy)
   (setq-local proxy-mode-proxy-type "http")
-  (getenv "HTTP_PROXY"))
+  (getenv "HTTP_PROXY")
+
+  ;; TODO: how to `setenv' buffer locally?
+  ;; this will make `proxy-mode-http-enable' invalid.
+  ;; (make-local-variable 'process-environment)
+  ;; (add-to-list 'process-environment (format "HTTP_PROXY=%s" ))
+  ;; (add-to-list 'process-environment (format "HTTPS_PROXY=%s" ))
+  )
 
 (defun proxy-mode-http-disable ()
   "Disable HTTP proxy."
