@@ -143,8 +143,8 @@
   :group 'proxy-mode
   :keymap proxy-mode-map
   (if proxy-mode
-      (proxy-mode-disable)
-    (proxy-mode-enable)))
+      (proxy-mode-enable)
+    (proxy-mode-disable)))
 
 ;; ;;;###autoload
 ;; (define-globalized-minor-mode global-proxy-mode proxy-mode proxy-mode)
