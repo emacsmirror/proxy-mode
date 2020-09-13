@@ -61,6 +61,9 @@
   :safe #'listp
   :group 'proxy-mode)
 
+(defun proxy-mode-lighter-func ()
+  (format " Proxy[%s]" proxy-mode-proxy-type))
+
 ;;; ------------------------------ HTTP Proxy ---------------------------------------------------
 
 (defun proxy-mode-http-enable ()
@@ -136,7 +139,7 @@
   "A minor mode to toggle `proxy-mode'."
   :require 'proxy-mode
   :init-value nil
-  :lighter " Proxy"
+  :lighter (:eval (proxy-mode-lighter-func))
   :group 'proxy-mode
   :keymap proxy-mode-map
   :global nil
