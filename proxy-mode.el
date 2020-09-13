@@ -142,7 +142,6 @@
   :lighter (:eval (proxy-mode-lighter-func))
   :group 'proxy-mode
   :keymap proxy-mode-map
-  :global nil
   (if proxy-mode
       (proxy-mode-disable)
     (proxy-mode-enable)))
