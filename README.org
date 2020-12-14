@@ -4,7 +4,8 @@ A minor mode to toggle proxy for Emacs. Supports HTTP proxy and socks v4, v5
 proxy with Emacs built-in functions.
 
 *NOTE*:
-This minor mode supports buffer-local proxy: Emacs http, and Emacs socks.
+This minor mode =proxy-mode= is buffer locally by default.
+It supports buffer-local proxy: Emacs http, and Emacs socks.
 Not support buffer-locally shell environment variable HTTP_PROXY.
 
 * Features

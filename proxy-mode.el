@@ -81,7 +81,7 @@
   ;; (add-to-list 'process-environment (format "HTTPS_PROXY=%s" ))
   )
 
-(defun proxy-mode-env-http-disable ()
+(defun proxy-mode--env-http-disable ()
   "Disable HTTP proxy."
   (setenv "HTTP_PROXY" nil)
   (setenv "HTTPS_PROXY" nil)
@@ -95,7 +95,7 @@
   (setq-local proxy-mode-proxy-type "url")
   (message (format "Proxy-mode %s url proxy enabled." (car proxy-mode-emacs-http-proxy))))
 
-(defun proxy-mode-emacs-url-disable ()
+(defun proxy-mode--emacs-url-disable ()
   "Disable URL proxy."
   (setq-local url-proxy-services nil)
   (setq-local proxy-mode-proxy-type nil))
@@ -111,7 +111,7 @@ NOTE: it only works for http:// connections. Not work for https:// connections."
   (setq-local proxy-mode-proxy-type "socks")
   (message "Proxy-mode socks proxy %s enabled." proxy-mode-emacs-socks-proxy))
 
-(defun proxy-mode-emacs-socks-disable ()
+(defun proxy-mode--emacs-socks-disable ()
   "Disable Socks proxy."
   (setq-local url-gateway-method 'native)
   (setq-local proxy-mode-proxy-type nil))
@@ -134,18 +134,20 @@ NOTE: it only works for http:// connections. Not work for https:// connections."
 (defun proxy-mode-disable ()
   "Disable proxy-mode."
   (pcase proxy-mode-proxy-type
-    ("http" (proxy-mode-env-http-disable))
-    ("socks" (proxy-mode-emacs-socks-disable))
-    ("url" (proxy-mode-emacs-url-disable))))
+    ("http" (proxy-mode--env-http-disable))
+    ("socks" (proxy-mode--emacs-socks-disable))
+    ("url" (proxy-mode--emacs-url-disable))))
 
 (defvar proxy-mode-map nil)
 
 ;;;###autoload
 (define-minor-mode proxy-mode
-  "A minor mode to toggle `proxy-mode'.
+  "A minor mode to toggle `proxy-mode' buffer locally.
 
 This minor mode supports buffer-local proxy: Emacs http, and Emacs socks.
-Not support buffer-locally shell environment variable HTTP_PROXY."
+Not support buffer-locally shell environment variable HTTP_PROXY.
+
+If you want use proxy-mode globally, use command ‘global-proxy-mode’."
   :require 'proxy-mode
   :init-value nil
   :lighter (:eval (proxy-mode-lighter-func))
@@ -155,8 +157,8 @@ Not support buffer-locally shell environment variable HTTP_PROXY."
       (proxy-mode-enable)
     (proxy-mode-disable)))
 
-;; ;;;###autoload
-;; (define-globalized-minor-mode global-proxy-mode proxy-mode proxy-mode)
+;;;###autoload
+(define-globalized-minor-mode global-proxy-mode proxy-mode proxy-mode)
 
 
 
