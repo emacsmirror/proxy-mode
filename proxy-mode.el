@@ -38,13 +38,13 @@
   "Currently enabled proxy type.")
 
 ;; Privoxy
-(defcustom proxy-mode-http-proxy "http://localhost:8118"
+(defcustom proxy-mode-env-http-proxy "http://localhost:8118"
   "Default HTTP_PROXY environment variable value."
   :type 'string
   :safe #'stringp
   :group 'proxy-mode)
 
-(defcustom proxy-mode-url-proxy '(("http"  . "127.0.0.1:8118")
+(defcustom proxy-mode-emacs-http-proxy '(("http"  . "127.0.0.1:8118")
                                   ("https" . "127.0.0.1:8118")
                                   ("ftp"   . "127.0.0.1:8118")
                                   ;; don't use `localhost', avoid robe server (For Ruby) can't response.
@@ -55,7 +55,7 @@
   :safe #'nested-alist-p
   :group 'proxy-mode)
 
-(defcustom proxy-mode-socks-proxy '("Default server" "127.0.0.1" 1080 5)
+(defcustom proxy-mode-emacs-socks-proxy '("Default server" "127.0.0.1" 1080 5)
   "Default `socks-server' value."
   :type 'list
   :safe #'listp
@@ -66,22 +66,22 @@
 
 ;;; ------------------------------ HTTP Proxy ---------------------------------------------------
 
-(defun proxy-mode-http-enable ()
+(defun proxy-mode-env-http-enable ()
   "Enable HTTP proxy."
   ;; `setenv' works by modifying ‘process-environment’.
-  (setenv "HTTP_PROXY"  proxy-mode-http-proxy)
-  (setenv "HTTPS_PROXY" proxy-mode-http-proxy)
+  (setenv "HTTP_PROXY"  proxy-mode-env-http-proxy)
+  (setenv "HTTPS_PROXY" proxy-mode-env-http-proxy)
   (setq-local proxy-mode-proxy-type "http")
   (getenv "HTTP_PROXY")
 
   ;; TODO: how to `setenv' buffer locally?
-  ;; this will make `proxy-mode-http-enable' invalid.
+  ;; this will make `proxy-mode-env-http-enable' invalid.
   ;; (make-local-variable 'process-environment)
   ;; (add-to-list 'process-environment (format "HTTP_PROXY=%s" ))
   ;; (add-to-list 'process-environment (format "HTTPS_PROXY=%s" ))
   )
 
-(defun proxy-mode-http-disable ()
+(defun proxy-mode-env-http-disable ()
   "Disable HTTP proxy."
   (setenv "HTTP_PROXY" nil)
   (setenv "HTTPS_PROXY" nil)
@@ -89,28 +89,28 @@
 
 ;;; ------------------------------ URL Proxy --------------------------------------------------
 
-(defun proxy-mode-url-enable ()
+(defun proxy-mode-emacs-url-enable ()
   "Enable URL proxy."
-  (setq-local url-proxy-services proxy-mode-url-proxy)
+  (setq-local url-proxy-services proxy-mode-emacs-http-proxy)
   (setq-local proxy-mode-proxy-type "url")
-  (message (format "Proxy-mode %s url proxy enabled." (car proxy-mode-url-proxy))))
+  (message (format "Proxy-mode %s url proxy enabled." (car proxy-mode-emacs-http-proxy))))
 
-(defun proxy-mode-url-disable ()
+(defun proxy-mode-emacs-url-disable ()
   "Disable URL proxy."
   (setq-local url-proxy-services nil)
   (setq-local proxy-mode-proxy-type nil))
 
 ;;; ------------------------------ Socks Proxy --------------------------------------------------
 
-(defun proxy-mode-socks-enable ()
+(defun proxy-mode-emacs-socks-enable ()
   "Enable Socks proxy."
   (setq-local url-gateway-method 'socks)
   (setq-local socks-noproxy '("localhost" "192.168.*" "10.*"))
-  (setq-local socks-server proxy-mode-socks-proxy)
+  (setq-local socks-server proxy-mode-emacs-socks-proxy)
   (setq-local proxy-mode-proxy-type "socks")
-  (message "Proxy-mode socks proxy %s enabled." proxy-mode-socks-proxy))
+  (message "Proxy-mode socks proxy %s enabled." proxy-mode-emacs-socks-proxy))
 
-(defun proxy-mode-socks-disable ()
+(defun proxy-mode-emacs-socks-disable ()
   "Disable Socks proxy."
   (setq-local url-gateway-method 'native)
   (setq-local proxy-mode-proxy-type nil))
@@ -126,16 +126,16 @@
                                                  (mapcar 'car proxy-mode-types))
                                 proxy-mode-types)))))
     (cl-case selected-proxy
-      ('http (proxy-mode-http-enable))
-      ('socks (proxy-mode-socks-enable))
-      ('url (proxy-mode-url-enable)))))
+      ('http (proxy-mode-env-http-enable))
+      ('socks (proxy-mode-emacs-socks-enable))
+      ('url (proxy-mode-emacs-url-enable)))))
 
 (defun proxy-mode-disable ()
   "Disable proxy-mode."
   (pcase proxy-mode-proxy-type
-    ("http" (proxy-mode-http-disable))
-    ("url" (proxy-mode-url-disable))
-    ("socks" (proxy-mode-socks-disable))))
+    ("http" (proxy-mode-env-http-disable))
+    ("socks" (proxy-mode-emacs-socks-disable))
+    ("url" (proxy-mode-emacs-url-disable))))
 
 (defvar proxy-mode-map nil)
 
