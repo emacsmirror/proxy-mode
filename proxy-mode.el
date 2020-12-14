@@ -31,7 +31,9 @@
   :group 'proxy-mode)
 
 (defvar proxy-mode-types
-  '(("HTTP Proxy" . http) ("Socks Proxy" . socks) ("URL proxy" . url))
+  '(("Environment HTTP Proxy" . env-http)
+    ("Emacs Socks Proxy" . emacs-socks)
+    ("Emacs HTTP proxy" . emacs-http))
   "A list of `proxy-mode' supported proxy types.")
 
 (defvar proxy-mode-proxy-type nil
@@ -89,7 +91,7 @@
 
 ;;; ------------------------------ URL Proxy --------------------------------------------------
 
-(defun proxy-mode-emacs-url-enable ()
+(defun proxy-mode-emacs-http-enable ()
   "Enable URL proxy."
   (setq-local url-proxy-services proxy-mode-emacs-http-proxy)
   (setq-local proxy-mode-proxy-type "url")
@@ -118,25 +120,29 @@ NOTE: it only works for http:// connections. Not work for https:// connections."
 
 ;;; ------------------------------------------------------------------------------------------
 
+(defun proxy-mode-select-proxy ()
+  "Select proxy type."
+  (if proxy-mode-proxy-type
+      (message "proxy-mode is already enabled.")
+    (setq proxy-mode-proxy-type
+          (cdr (assoc
+                (completing-read "Select proxy service to enable: "
+                                 (mapcar 'car proxy-mode-types))
+                proxy-mode-types)))))
+
 (defun proxy-mode-enable ()
   "Enable proxy-mode."
-  (let ((selected-proxy (if proxy-mode-proxy-type
-                            (message "proxy-mode is already enabled.")
-                          (cdr (assoc
-                                (completing-read "Select proxy service to enable: "
-                                                 (mapcar 'car proxy-mode-types))
-                                proxy-mode-types)))))
-    (cl-case selected-proxy
-      ('http (proxy-mode-env-http-enable))
-      ('socks (proxy-mode-emacs-socks-enable))
-      ('url (proxy-mode-emacs-url-enable)))))
+  (cl-case proxy-mode-proxy-type
+    ('env-http (proxy-mode-env-http-enable))
+    ('emacs-socks (proxy-mode-emacs-socks-enable))
+    ('emacs-http (proxy-mode-emacs-http-enable))))
 
 (defun proxy-mode-disable ()
   "Disable proxy-mode."
   (pcase proxy-mode-proxy-type
-    ("http" (proxy-mode--env-http-disable))
-    ("socks" (proxy-mode--emacs-socks-disable))
-    ("url" (proxy-mode--emacs-url-disable))))
+    ('env-http (proxy-mode--env-http-disable))
+    ('emacs-socks (proxy-mode--emacs-socks-disable))
+    ('emacs-http (proxy-mode--emacs-url-disable))))
 
 (defvar proxy-mode-map nil)
 
@@ -154,7 +160,9 @@ If you want use proxy-mode globally, use command ‘global-proxy-mode’."
   :group 'proxy-mode
   :keymap proxy-mode-map
   (if proxy-mode
-      (proxy-mode-enable)
+      (progn
+        (proxy-mode-select-proxy)
+        (proxy-mode-enable))
     (proxy-mode-disable)))
 
 ;;;###autoload
