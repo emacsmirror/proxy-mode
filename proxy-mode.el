@@ -31,6 +31,7 @@
   :group 'proxy-mode)
 
 (defvar proxy-mode-types
+
   '(("Environment HTTP Proxy" . env-http)
     ("Emacs Socks Proxy" . emacs-socks)
     ("Emacs HTTP proxy" . emacs-http))
@@ -97,7 +98,7 @@
   (setq-local proxy-mode-proxy-type "url")
   (message (format "Proxy-mode %s url proxy enabled." (car proxy-mode-emacs-http-proxy))))
 
-(defun proxy-mode--emacs-url-disable ()
+(defun proxy-mode--emacs-http-disable ()
   "Disable URL proxy."
   (setq-local url-proxy-services nil)
   (setq-local proxy-mode-proxy-type nil))
@@ -107,6 +108,8 @@
 (defun proxy-mode-emacs-socks-enable ()
   "Enable Socks proxy.
 NOTE: it only works for http:// connections. Not work for https:// connections."
+  (require 'url-gw)
+  (require 'socks)
   (setq-local url-gateway-method 'socks)
   (setq-local socks-noproxy '("localhost" "192.168.*" "10.*"))
   (setq-local socks-server proxy-mode-emacs-socks-proxy)
@@ -142,7 +145,7 @@ NOTE: it only works for http:// connections. Not work for https:// connections."
   (pcase proxy-mode-proxy-type
     ('env-http (proxy-mode--env-http-disable))
     ('emacs-socks (proxy-mode--emacs-socks-disable))
-    ('emacs-http (proxy-mode--emacs-url-disable))))
+    ('emacs-http (proxy-mode--emacs-http-disable))))
 
 (defvar proxy-mode-map nil)
 
@@ -165,8 +168,51 @@ If you want use proxy-mode globally, use command ‘global-proxy-mode’."
         (proxy-mode-enable))
     (proxy-mode-disable)))
 
+(defun proxy-mode-enable-global ()
+  "Enable proxy in Emacs globally."
+  (proxy-mode-select-proxy)
+  (cl-case proxy-mode-proxy-type
+    ('env-http
+     (setenv "HTTP_PROXY"  proxy-mode-env-http-proxy)
+     (setenv "HTTPS_PROXY" proxy-mode-env-http-proxy)
+     (getenv "HTTP_PROXY")
+     (message "Proxy-mode environment http proxy enabled globally."))
+    ('emacs-socks
+     (require 'url-gw)
+     (require 'socks)
+     (setq url-gateway-method 'socks)
+     (setq socks-noproxy '("localhost" "192.168.*" "10.*"))
+     (setq socks-server proxy-mode-emacs-socks-proxy)
+     (message "Proxy-mode socks proxy %s enabled globally." proxy-mode-emacs-socks-proxy))
+    ('emacs-http
+     (setq url-proxy-services proxy-mode-emacs-http-proxy)
+     (message (format "Proxy-mode %s url proxy enabled globally." (car proxy-mode-emacs-http-proxy))))))
+
+(defun proxy-mode-disable-global ()
+  "Disable proxy in Emacs globally."
+  (cl-case proxy-mode-proxy-type
+    ('env-http
+     (setenv "HTTP_PROXY"  nil)
+     (setenv "HTTPS_PROXY" nil)
+     (getenv "HTTP_PROXY"))
+    ('emacs-socks
+     (setq url-gateway-method 'native))
+    ('emacs-http
+     (setq url-proxy-services nil)))
+  (setq proxy-mode-proxy-type nil))
+
 ;;;###autoload
-(define-globalized-minor-mode global-proxy-mode proxy-mode proxy-mode)
+(define-minor-mode global-proxy-mode
+  "A minor mode to set proxy in Emacs globally."
+  :require 'proxy-mode
+  :init-value nil
+  :global t
+  :lighter (:eval (proxy-mode-lighter-func))
+  :group 'proxy-mode
+  :keymap proxy-mode-map
+  (if global-proxy-mode
+      (proxy-mode-enable-global)
+    (proxy-mode-disable-global)))
 
 
 
