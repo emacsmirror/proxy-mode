@@ -103,7 +103,8 @@
 ;;; ------------------------------ Socks Proxy --------------------------------------------------
 
 (defun proxy-mode-emacs-socks-enable ()
-  "Enable Socks proxy."
+  "Enable Socks proxy.
+NOTE: it only works for http:// connections. Not work for https:// connections."
   (setq-local url-gateway-method 'socks)
   (setq-local socks-noproxy '("localhost" "192.168.*" "10.*"))
   (setq-local socks-server proxy-mode-emacs-socks-proxy)
