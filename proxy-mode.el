@@ -142,7 +142,10 @@ NOTE: it only works for http:// connections. Not work for https:// connections."
 
 ;;;###autoload
 (define-minor-mode proxy-mode
-  "A minor mode to toggle `proxy-mode'."
+  "A minor mode to toggle `proxy-mode'.
+
+This minor mode supports buffer-local proxy: Emacs http, and Emacs socks.
+Not support buffer-locally shell environment variable HTTP_PROXY."
   :require 'proxy-mode
   :init-value nil
   :lighter (:eval (proxy-mode-lighter-func))

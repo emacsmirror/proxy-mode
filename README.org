@@ -1,13 +1,17 @@
 * Intro
 
-A minor mode to toggle proxy for Emacs. Supports HTTP proxy and socks v4, v5 proxy with Emacs built-in functions.
+A minor mode to toggle proxy for Emacs. Supports HTTP proxy and socks v4, v5
+proxy with Emacs built-in functions.
 
+*NOTE*:
+This minor mode supports buffer-local proxy: Emacs http, and Emacs socks.
+Not support buffer-locally shell environment variable HTTP_PROXY.
 
 * Features
 
-- Support HTTP proxy
-- Support Socks v4, v5 proxy
-
+- Support Emacs built-in HTTP proxy
+- Support Emacs built-in Socks v4, v5 proxy
+- Support shell environment HTTP proxy
 
 * Installation
 
@@ -18,7 +22,6 @@ A minor mode to toggle proxy for Emacs. Supports HTTP proxy and socks v4, v5 pro
   :ensure t)
 #+end_src
 
-
 * Config
 
 ** specify local host regexp
@@ -27,7 +30,6 @@ A minor mode to toggle proxy for Emacs. Supports HTTP proxy and socks v4, v5 pro
 (setq url-gateway-local-host-regexp
       (concat "\\`" (regexp-opt '("localhost" "127.0.0.1")) "\\'"))
 #+end_src
-
 
 * Usage
 
