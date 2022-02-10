@@ -4,7 +4,7 @@
 ;; Package-Requires: ((emacs "25"))
 ;; Package-Version: 0.1
 ;; Keywords: comm proxy
-;; homepage: https://github.com/stardiviner/proxy-mode
+;; homepage: https://repo.or.cz/proxy-mode.git
 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
