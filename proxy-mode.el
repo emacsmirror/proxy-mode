@@ -78,7 +78,6 @@
   (setenv "HTTP_PROXY"  proxy-mode-env-http-service)
   (setenv "HTTPS_PROXY" proxy-mode-env-http-service)
   (setq proxy-mode-proxy-type 'env-http-proxy)
-  (getenv "HTTP_PROXY")
 
   ;; TODO: how to `setenv' buffer locally?
   ;; this will make `proxy-mode-env-proxy-enable' invalid.
