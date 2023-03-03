@@ -158,12 +158,7 @@ NOTE: it only works for http:// connections. Not work for https:// connections."
 
 ;;;###autoload
 (define-minor-mode proxy-mode
-  "A minor mode to toggle `proxy-mode' buffer locally.
-
-This minor mode supports buffer-local proxy: Emacs http, and Emacs socks.
-Not support buffer-locally shell environment variable HTTP_PROXY.
-
-If you want use proxy-mode globally, use command ‘global-proxy-mode’."
+  "A minor mode to set variable proxy for Emacs."
   :require 'proxy-mode
   :init-value nil
   :lighter (:eval (proxy-mode-lighter-func))
@@ -174,52 +169,6 @@ If you want use proxy-mode globally, use command ‘global-proxy-mode’."
         (proxy-mode-select-proxy)
         (proxy-mode-enable))
     (proxy-mode-disable)))
-
-(defun proxy-mode-enable-global ()
-  "Enable proxy in Emacs globally."
-  (proxy-mode-select-proxy)
-  (cl-case proxy-mode-proxy-type
-    ('emacs-url
-     (setq url-proxy-services proxy-mode-url-proxy-services)
-     (message (format "[proxy-mode] url.el proxy %s enabled globally." (car proxy-mode-url-proxy-services))))
-    ('emacs-socks
-     (require 'url-gw)
-     (require 'socks)
-     (setq url-gateway-method 'socks)
-     (setq socks-noproxy '("localhost" "192.168.*" "10.*"))
-     (setq socks-server proxy-mode-socks-proxy-server)
-     (message "[proxy-mode] socks.el proxy %s enabled globally." proxy-mode-socks-proxy-server))
-    ('env-http
-     (setenv "HTTP_PROXY"  proxy-mode-env-http-proxy)
-     (setenv "HTTPS_PROXY" proxy-mode-env-http-proxy)
-     (getenv "HTTP_PROXY")
-     (message "[proxy-mode] environment variable HTTP_PROXY enabled globally inside Emacs."))))
-
-(defun proxy-mode-disable-global ()
-  "Disable proxy in Emacs globally."
-  (cl-case proxy-mode-proxy-type
-    ('emacs-url
-     (setq url-proxy-services nil))
-    ('emacs-socks
-     (setq url-gateway-method 'native))
-    ('env-http
-     (setenv "HTTP_PROXY"  nil)
-     (setenv "HTTPS_PROXY" nil)
-     (getenv "HTTP_PROXY")))
-  (setq proxy-mode-proxy-type nil))
-
-;;;###autoload
-(define-minor-mode global-proxy-mode
-  "A minor mode to set proxy in Emacs globally."
-  :require 'proxy-mode
-  :init-value nil
-  :global t
-  :lighter (:eval (proxy-mode-lighter-func))
-  :group 'proxy-mode
-  :keymap proxy-mode-map
-  (if global-proxy-mode
-      (proxy-mode-enable-global)
-    (proxy-mode-disable-global)))
 
 
 
