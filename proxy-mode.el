@@ -40,25 +40,28 @@
   "Currently enabled proxy type.")
 
 ;; Privoxy
-(defcustom proxy-mode-env-http-service "http://localhost:7980"
+(defcustom proxy-mode-env-http-service
+  (unless (getenv "HTTP_PROXY") "http://localhost:7980")
   "Customize HTTP_PROXY environment variable value."
   :type 'string
   :safe #'stringp
   :group 'proxy-mode)
 
 (defcustom proxy-mode-url-proxy-services
-  '(("http"  . "127.0.0.1:7890")
-    ("https" . "127.0.0.1:7890")
-    ("ftp"   . "127.0.0.1:7890")
-    ;; don't use `localhost', avoid robe server (For Ruby) can't response.
-    ("no_proxy" . "127.0.0.1")
-    ("no_proxy" . "^.*\\(baidu\\|sina)\\.com"))
+  (unless (default-value 'url-proxy-services)
+    '(("http"  . "127.0.0.1:7890")
+      ("https" . "127.0.0.1:7890")
+      ("ftp"   . "127.0.0.1:7890")
+      ;; don't use `localhost', avoid robe server (For Ruby) can't response.
+      ("no_proxy" . "127.0.0.1")
+      ("no_proxy" . "^.*\\(baidu\\|sina)\\.com")))
   "Customize usual Emacs network http request through `url-proxy-services' proxy rules."
   :type 'alist
   :safe #'nested-alist-p
   :group 'proxy-mode)
 
-(defcustom proxy-mode-socks-proxy-server '("Default server" "127.0.0.1" 1080 5)
+(defcustom proxy-mode-socks-proxy-server
+  (unless (default-value 'socks-server) '("Default server" "127.0.0.1" 1080 5))
   "Customize the `socks-server' value for Emacs library `socks'."
   :type 'list
   :safe #'listp
