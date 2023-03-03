@@ -40,7 +40,7 @@
   "Currently enabled proxy type.")
 
 ;; Privoxy
-(defcustom proxy-mode-env-http-proxy "http://localhost:7980"
+(defcustom proxy-mode-env-http-service "http://localhost:7980"
   "Customize HTTP_PROXY environment variable value."
   :type 'string
   :safe #'stringp
@@ -72,8 +72,8 @@
 (defun proxy-mode-env-proxy-enable ()
   "Enable HTTP proxy."
   ;; `setenv' works by modifying ‘process-environment’.
-  (setenv "HTTP_PROXY"  proxy-mode-env-http-proxy)
-  (setenv "HTTPS_PROXY" proxy-mode-env-http-proxy)
+  (setenv "HTTP_PROXY"  proxy-mode-env-http-service)
+  (setenv "HTTPS_PROXY" proxy-mode-env-http-service)
   (setq-local proxy-mode-proxy-type 'env-http-proxy)
   (getenv "HTTP_PROXY")
 
