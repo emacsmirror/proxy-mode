@@ -47,12 +47,13 @@
   :safe #'stringp
   :group 'proxy-mode)
 
-(defcustom proxy-mode-emacs-http-proxy '(("http"  . "127.0.0.1:8118")
-                                  ("https" . "127.0.0.1:8118")
-                                  ("ftp"   . "127.0.0.1:8118")
-                                  ;; don't use `localhost', avoid robe server (For Ruby) can't response.
-                                  ("no_proxy" . "127.0.0.1")
-                                  ("no_proxy" . "^.*\\(baidu\\|sina)\\.com"))
+(defcustom proxy-mode-emacs-http-proxy
+  '(("http"  . "127.0.0.1:7890")
+    ("https" . "127.0.0.1:7890")
+    ("ftp"   . "127.0.0.1:7890")
+    ;; don't use `localhost', avoid robe server (For Ruby) can't response.
+    ("no_proxy" . "127.0.0.1")
+    ("no_proxy" . "^.*\\(baidu\\|sina)\\.com"))
   "A list of rules for `url-proxy-services'."
   :type 'alist
   :safe #'nested-alist-p
