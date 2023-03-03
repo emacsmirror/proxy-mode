@@ -31,7 +31,7 @@
   :group 'proxy-mode)
 
 (defvar proxy-mode-proxy-types
-  '(("Set Emacs url.el HTTP request proxy" . emacs-url-proxy)
+  '(("Set Emacs url.el library HTTP request proxy" . emacs-url-proxy)
     ("Set Emacs socks.el library proxy" . emacs-socks-proxy)
     ("Set environment variable HTTP_PROXY" . env-http-proxy))
   "A list of `proxy-mode' supported proxy types.")
