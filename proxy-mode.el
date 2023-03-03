@@ -65,7 +65,7 @@
   :group 'proxy-mode)
 
 (defun proxy-mode-lighter-func ()
-  (format " Proxy[%s]" proxy-mode-proxy-type))
+  (format " proxy[%s]" proxy-mode-proxy-type))
 
 ;;; ------------------------------ HTTP Proxy ---------------------------------------------------
 
