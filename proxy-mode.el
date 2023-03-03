@@ -146,16 +146,16 @@ NOTE: it only works for http:// connections. Not work for https:// connections."
 (defun proxy-mode-enable ()
   "Enable proxy-mode."
   (cl-case proxy-mode-proxy-type
-    ('emacs-url-proxy (proxy-mode-url-proxy-enable))
-    ('emacs-socks-proxy (proxy-mode-socks-proxy-enable))
-    ('env-http-proxy (proxy-mode-env-proxy-enable))))
+    (emacs-url-proxy (proxy-mode-url-proxy-enable))
+    (emacs-socks-proxy (proxy-mode-socks-proxy-enable))
+    (env-http-proxy (proxy-mode-env-proxy-enable))))
 
 (defun proxy-mode-disable ()
   "Disable proxy-mode."
-  (pcase proxy-mode-proxy-type
-    ('emacs-url-proxy (proxy-mode-url-proxy-disable))
-    ('emacs-socks-proxy (proxy-mode-socks-proxy-disable))
-    ('env-http-proxy (proxy-mode--env-proxy-disable))))
+  (cl-case proxy-mode-proxy-type
+    (emacs-url-proxy (proxy-mode-url-proxy-disable))
+    (emacs-socks-proxy (proxy-mode-socks-proxy-disable))
+    (env-http-proxy (proxy-mode--env-proxy-disable))))
 
 (defvar proxy-mode-map nil)
 
