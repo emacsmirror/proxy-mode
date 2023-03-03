@@ -40,7 +40,7 @@
   "Currently enabled proxy type.")
 
 ;; Privoxy
-(defcustom proxy-mode-env-http-proxy "http://localhost:8118"
+(defcustom proxy-mode-env-http-proxy "http://localhost:7980"
   "Customize HTTP_PROXY environment variable value."
   :type 'string
   :safe #'stringp
