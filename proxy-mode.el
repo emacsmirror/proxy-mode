@@ -107,7 +107,7 @@
   "Disable url.el proxy by unset `url-proxy-services'."
   (setq url-proxy-services nil)
   (setq proxy-mode-proxy-type nil)
-  (message (format "[proxy-mode] url.el proxy disable.")))
+  (message (format "[proxy-mode] url.el proxy disabled.")))
 
 ;;; ---------------------------- socks.el proxy -----------------------------------------------
 
